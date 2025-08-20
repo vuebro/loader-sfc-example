@@ -6,60 +6,102 @@ Learn more about the recommended Project Setup and IDE Support in the [Vue Docs 
 
 # @vuebro/sfc-loader
 
-Этот проект был создан с помощью команды:
+This project was created using the following command:
 
 ```
-npm create vite@latest my-vue-app -- --template vue-ts
+npm create vite@latest sfc-loader-example -- --template vue-ts
 ```
 
-Далее в него были внесены следующие изменения, с целью продемонстрировать, как использовать пакет @vuebro/sfc-loader, который позволяет динамически загружать файлы vue sfc и компилировать непосредственно в браузере:
+Further modifications were made to it to demonstrate how to use the `@vuebro/sfc-loader` package, which enables dynamic loading of Vue SFC files and their compilation directly in the browser:
 
-1. В файл package.json были добавлены следующие пакеты:
+1. The following packages were added to the package.json file:
 
 ```json
 {
-  "name": "sfc-loader-example",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
-  },
+  ...
   "dependencies": {
-    // highlight-next-line
+    ...
     "@vuebro/sfc-loader": "^1.3.4",
-    "vue": "^3.5.18"
+    ...
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
-    "@vue/tsconfig": "^0.7.0",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.2",
-    // highlight-next-line
+    ...
     "vite-plugin-externalize-dependencies": "^1.0.1",
-    // highlight-next-line
     "vite-plugin-static-copy": "^3.1.1",
-    "vue-tsc": "^3.0.5"
+    ...
   }
 }
 ```
 
-```js
-        // highlight-start
-        function startHighlight() {
-          console.log("Highlight starts here.");
-        }
-        // highlight-end
-        function endHighlight() {
-          console.log("Highlight ends here.");
-        }
+ - @vuebro/sfc-loader - a loader for Vue SFC (Single File Component) files
+ - vite-plugin-externalize-dependencies - a plugin for Vite that allows you to exclude specific dependencies from the Vite bundle during development
+ - vite-plugin-static-copy - a Vite plugin designed to copy static assets during the build process and provide dev server support for them
 
-где:
+2. The next step was configuring vite.config.ts:
 
- - @vuebro/sfc-loader: a loader for Vue SFC (Single File Component) files
- - vite-plugin-externalize-dependencies: a plugin for Vite that allows you to exclude specific dependencies from the Vite bundle during development
- - vite-plugin-static-copy: a Vite plugin designed to copy static assets during the build process and provide dev server support for them
+```ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+import externalize from 'vite-plugin-externalize-dependencies'
 
-2. Следующим шагом настроен 
+// https://vite.dev/config/
+export default defineConfig({
+  build: {rollupOptions: {external: ['vue']}},
+  plugins: [
+    vue(),
+    externalize({externals: ['vue']}),
+    viteStaticCopy({targets: [{dest: 'assets', src: './node_modules/vue/dist/vue.esm-browser.prod.js'}]})
+  ],
+})
+```
+
+where the following configuration has been added:
+
+- build: {rollupOptions: {external: ['vue']}} - treats vue as external dependency in the build mode
+
+and plugins have been added:
+
+- externalize({externals: ['vue']}) - treats vue as external dependency in the dev mode
+- viteStaticCopy({targets: [{dest: 'assets', src: './node_modules/vue/dist/vue.esm-browser.prod.js'}]}) - copy vue to the assets folder
+
+3. The importmap has been added to the end of the `head` section in the index.html file to provide access to Vue in runtime mode:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    ...
+    <script type="importmap">{"imports": {"vue": "./assets/vue.esm-browser.prod.js"}}</script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+```
+
+4. The `HelloWorld.vue` file has been moved along with the `components` folder from `src/components` to `public/components`. This ensures that Vite will place the `HelloWorld.vue` file into `dist/components` during the build process.
+
+5. In the `App.vue` file, the loading of the `HelloWorld` component has been changed. Now it is loaded and compiled directly in the browser.
+
+```html
+<script setup lang="ts">
+// import HelloWorld from './components/HelloWorld.vue'
+
+import { defineAsyncComponent } from 'vue'
+import loadModule from '@vuebro/sfc-loader'
+
+const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'))
+</script>
+
+<template>
+  ...
+</template>
+
+<style scoped>
+...
+</style>
+```
+
+> If modules are imported in the loaded component, remember that they have to be specified in the importmap.
