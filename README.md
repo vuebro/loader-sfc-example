@@ -46,6 +46,16 @@ npm create vite@latest my-vue-app -- --template vue-ts
 }
 ```
 
+    *   ```js
+        // highlight-start
+        function startHighlight() {
+          console.log("Highlight starts here.");
+        }
+        // highlight-end
+        function endHighlight() {
+          console.log("Highlight ends here.");
+        }
+
 где:
 
  - @vuebro/sfc-loader: a loader for Vue SFC (Single File Component) files
