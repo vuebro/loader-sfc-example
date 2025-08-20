@@ -4,7 +4,7 @@
 import { defineAsyncComponent } from 'vue'
 import loadModule from '@vuebro/sfc-loader'
 
-const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'));
+const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'))
 </script>
 
 <template>
