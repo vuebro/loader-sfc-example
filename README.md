@@ -46,7 +46,7 @@ npm create vite@latest my-vue-app -- --template vue-ts
 }
 ```
 
-    *   ```js
+```js
         // highlight-start
         function startHighlight() {
           console.log("Highlight starts here.");
