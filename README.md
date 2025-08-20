@@ -4,15 +4,15 @@ This template should help get you started developing with Vue 3 and TypeScript i
 
 Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
 
-# @vuebro/sfc-loader
+# @vuebro/loader-sfc
 
 This project was created using the following command:
 
 ```
-npm create vite@latest sfc-loader-example -- --template vue-ts
+npm create vite@latest loader-sfc-example -- --template vue-ts
 ```
 
-Further modifications were made to it to demonstrate how to use the `@vuebro/sfc-loader` package, which enables dynamic loading of Vue SFC files and their compilation directly in the browser:
+Further modifications were made to it to demonstrate how to use the `@vuebro/loader-sfc` package, which enables dynamic loading of Vue SFC files and their compilation directly in the browser:
 
 1. The following packages were added to the package.json file:
 
@@ -21,7 +21,7 @@ Further modifications were made to it to demonstrate how to use the `@vuebro/sfc
   ...
   "dependencies": {
     ...
-    "@vuebro/sfc-loader": "latest",
+    "@vuebro/loader-sfc": "latest",
     ...
   },
   "devDependencies": {
@@ -33,7 +33,7 @@ Further modifications were made to it to demonstrate how to use the `@vuebro/sfc
 }
 ```
 
- - @vuebro/sfc-loader - a loader for Vue SFC (Single File Component) files
+ - @vuebro/loader-sfc - a loader for Vue SFC (Single File Component) files
  - vite-plugin-externalize-dependencies - a plugin for Vite that allows you to exclude specific dependencies from the Vite bundle during development
  - vite-plugin-static-copy - a Vite plugin designed to copy static assets during the build process and provide dev server support for them
 
@@ -90,7 +90,7 @@ and plugins have been added:
 // import HelloWorld from './components/HelloWorld.vue'
 
 import { defineAsyncComponent } from 'vue'
-import loadModule from '@vuebro/sfc-loader'
+import loadModule from '@vuebro/loader-sfc'
 
 const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'))
 </script>
