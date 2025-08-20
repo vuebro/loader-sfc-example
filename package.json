@@ -1,5 +1,5 @@
 {
-  "name": "sfc-loader-example",
+  "name": "loader-sfc-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vuebro/sfc-loader": "latest",
+    "@vuebro/loader-sfc": "latest",
     "vue": "^3.5.18"
   },
   "devDependencies": {
