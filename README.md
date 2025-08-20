@@ -16,7 +16,7 @@ npm create vite@latest my-vue-app -- --template vue-ts
 
 1. В файл package.json были добавлены следующие пакеты:
 
-```javascript:highlight={12,20-21}
+```json
 {
   "name": "sfc-loader-example",
   "private": true,
@@ -28,6 +28,7 @@ npm create vite@latest my-vue-app -- --template vue-ts
     "preview": "vite preview"
   },
   "dependencies": {
+    // highlight-next-line
     "@vuebro/sfc-loader": "^1.3.4",
     "vue": "^3.5.18"
   },
@@ -36,7 +37,9 @@ npm create vite@latest my-vue-app -- --template vue-ts
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
+    // highlight-next-line
     "vite-plugin-externalize-dependencies": "^1.0.1",
+    // highlight-next-line
     "vite-plugin-static-copy": "^3.1.1",
     "vue-tsc": "^3.0.5"
   }
