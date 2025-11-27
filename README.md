@@ -33,27 +33,34 @@ Further modifications were made to it to demonstrate how to use the `@vuebro/loa
 }
 ```
 
- - @vuebro/loader-sfc - a loader for Vue SFC (Single File Component) files
- - vite-plugin-externalize-dependencies - a plugin for Vite that allows you to exclude specific dependencies from the Vite bundle during development
- - vite-plugin-static-copy - a Vite plugin designed to copy static assets during the build process and provide dev server support for them
+- @vuebro/loader-sfc - a loader for Vue SFC (Single File Component) files
+- vite-plugin-externalize-dependencies - a plugin for Vite that allows you to exclude specific dependencies from the Vite bundle during development
+- vite-plugin-static-copy - a Vite plugin designed to copy static assets during the build process and provide dev server support for them
 
 2. The next step was configuring vite.config.ts:
 
 ```ts
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
-import externalize from 'vite-plugin-externalize-dependencies'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import externalize from "vite-plugin-externalize-dependencies";
 
 // https://vite.dev/config/
 export default defineConfig({
-  build: {rollupOptions: {external: ['vue']}},
+  build: { rollupOptions: { external: ["vue"] } },
   plugins: [
     vue(),
-    externalize({externals: ['vue']}),
-    viteStaticCopy({targets: [{dest: 'assets', src: './node_modules/vue/dist/vue.esm-browser.prod.js'}]})
+    externalize({ externals: ["vue"] }),
+    viteStaticCopy({
+      targets: [
+        {
+          dest: "assets",
+          src: "./node_modules/vue/dist/vue.esm-browser.prod.js",
+        },
+      ],
+    }),
   ],
-})
+});
 ```
 
 where the following configuration has been added:
@@ -68,11 +75,13 @@ and plugins have been added:
 3. The importmap has been added to the end of the `head` section in the index.html file to provide access to Vue in runtime mode:
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     ...
-    <script type="importmap">{"imports": {"vue": "./assets/vue.esm-browser.prod.js"}}</script>
+    <script type="importmap">
+      { "imports": { "vue": "./assets/vue.esm-browser.prod.js" } }
+    </script>
   </head>
   <body>
     <div id="app"></div>
@@ -87,20 +96,20 @@ and plugins have been added:
 
 ```html
 <script setup lang="ts">
-// import HelloWorld from './components/HelloWorld.vue'
+  // import HelloWorld from './components/HelloWorld.vue'
 
-import { defineAsyncComponent } from 'vue'
-import loadModule from '@vuebro/loader-sfc'
+  import { defineAsyncComponent } from "vue";
+  import loadModule from "@vuebro/loader-sfc";
 
-const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'))
+  const HelloWorld = defineAsyncComponent(async () =>
+    loadModule(await (await fetch("./components/HelloWorld.vue")).text())
+  );
 </script>
 
-<template>
-  ...
-</template>
+<template>...</template>
 
 <style scoped>
-...
+  ...
 </style>
 ```
 

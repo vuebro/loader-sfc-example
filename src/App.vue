@@ -1,10 +1,12 @@
 <script setup lang="ts">
 // import HelloWorld from './components/HelloWorld.vue'
 
-import { defineAsyncComponent } from 'vue'
-import loadModule from '@vuebro/loader-sfc'
+import { defineAsyncComponent } from "vue";
+import loadModule from "@vuebro/loader-sfc";
 
-const HelloWorld = defineAsyncComponent(() => loadModule('./components/HelloWorld.vue'))
+const HelloWorld = defineAsyncComponent(async () =>
+  loadModule(await (await fetch("./components/HelloWorld.vue")).text())
+);
 </script>
 
 <template>
